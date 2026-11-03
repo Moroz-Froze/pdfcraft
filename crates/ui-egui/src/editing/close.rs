@@ -136,6 +136,10 @@ impl PdfCraftApp {
     /// Request a normal application exit, preserving every unsaved document until answered.
     /// Returns false while the existing save/discard/cancel prompt needs a decision.
     pub(crate) fn request_quit(&mut self, ctx: &egui::Context) -> bool {
+        if !self.prepare_scan_quit() {
+            ctx.request_repaint();
+            return false;
+        }
         if self.first_dirty().is_some() {
             self.close_request = Some(CloseRequest::Quit);
             ctx.request_repaint();
@@ -175,6 +179,10 @@ impl PdfCraftApp {
             return;
         }
         // `first_dirty` counts text typed into a field as an unsaved change.
+        if !self.allow_quit && !self.prepare_scan_quit() {
+            ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
+            return;
+        }
         if !self.allow_quit && self.first_dirty().is_some() {
             ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
             self.close_request = Some(CloseRequest::Quit);

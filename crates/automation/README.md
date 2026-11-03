@@ -31,6 +31,11 @@ follows the box-level `align`; legacy `null` entries remain accepted with the sa
 - Tool names are `snake_case` (`page_rotate`): MCP clients reject dots. `ToolDef::command` links a tool to the registry id it automates (`page.rotate`), and `command_list` reports the link.
 - Pages and positions are **1-based**. Rectangles are PDF points with the origin at the top-left of the displayed page.
 - Unknown arguments are rejected, so typos fail loudly.
+- Scanner discovery and acquisition interact with the local network and hardware, and advertise
+  `openWorldHint: true` (including the compact MCP `tool_call` dispatcher). `doc_create` from
+  `scanner` requires `user_confirmed: true` after explicit user consent. Missing or false consent
+  is rejected before contacting a scanner. See `crates/scan/README.md` for address restrictions
+  and the scanner network boundary.
 - Tools that change a document return its summary (`doc`, `pages`, `dirty`, `undo`, `redo`, …).
 - `comment_image_preview` returns JSON and a PNG: `layer: "background"` (the default) gives the page without the selected image signature/initials; `layer: "image"` gives its embedded image with alpha. The metadata supplies its displayed rectangle, document rotation, `image_rotation` (how far clockwise the image is shown turned: 0 for one placed by PdfCraft, which keeps it upright as displayed) and annotation opacity. Each result can be saved with the CLI's `--out`. Cache the background and transform the image for live movement/resizing; `comment_edit` commits the final geometry in one undo step. Previewing never changes the document.
 - For proportional image signature resizing, use the embedded image layer's width/height ratio rather than a previously stretched annotation rectangle. The GUI preserves this ratio at corners with the opposite corner anchored; edge midpoint handles change only their own axis. `comment_edit` accepts the resulting rectangle.
@@ -270,3 +275,16 @@ navigation-history tool; use the opt-in UI control channel to navigate the displ
 (`#RRGGBB`, default black) for `text` and `date`. The colour is saved in the
 FreeText appearance and survives reopening. Other mark/signature types reject
 `color`; their appearance controls are separate.
+
+## Scanning
+
+`scanners` lists Windows WIA USB/network drivers and eSCL network devices (SANE on Unix).
+`doc_create` with `from: "scanner"` requires `scanner` and `user_confirmed: true`, after
+explicit consent to operate hardware. Options: `preset`, `color`, `scan_dpi`, `source`
+(`flatbed`, `feeder`, `duplex`), `paper`, `ocr`, `language`. `create.scanner` routes to the
+same tool through `command_run`; scan consent is checked there too.
+
+The new document is unsaved; `doc_save` obeys the usual roots and atomic-write rules.
+A failed batch that delivered sheets creates a partial PDF and returns `scan_warning`.
+WIA needs a scanner driver, not just a printer driver. No hardware coverage percentage
+is claimed. See [scan backends and limits](../scan/README.md).

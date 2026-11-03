@@ -219,6 +219,8 @@ Ranked; detail and the full milestone table in [docs/roadmap.md](docs/roadmap.md
 
 ## Progress log
 
+- **2026-11-03 (M14, #312):** Scanner acquisition (#312, adapted from #359): installed USB/network WIA drivers on Windows and local eSCL/SANE backends, with GUI and headless entry points. A Brother MFC-7860DW network flatbed scan at 200 dpi, color, Letter was acquired and saved as a one-page PDF on Windows. Other hardware, ADF/duplex, TWAIN/ICA and HTTPS-only eSCL remain unqualified. Optional scanner arguments are validated before acquisition, and image batches are embedded one input at a time. Readiness estimates unchanged.
+
 - **2026-11-02 (M10, #5743):** macOS print jobs name their title and owner (`com.apple.print.JobInfo.PMJobName`, `PMJobOwner`), as the system print dialog does, because a Kyocera filter crashes on a job without them. Checked by a test and through `doc_print` against a stand-in `lp`; not yet on a physical printer.
 
 - **2026-11-01 (M7, #5657):** Header/footer, watermark and background additions and replacements stage the complete call before committing. Synthetic later-page failures preserve exact incremental bytes, object count, dirty state and allocation cursor; success controls retain other marks and shared/inherited resources. Estimates unchanged.

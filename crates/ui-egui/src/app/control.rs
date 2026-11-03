@@ -143,6 +143,10 @@ impl PdfCraftApp {
                         self.execute("page.properties");
                         self.dialog
                     }
+                    "scanner" => {
+                        self.open_scan_dialog();
+                        self.dialog
+                    }
                     "none" => None,
                     _ => Some(Dialog::About),
                 };

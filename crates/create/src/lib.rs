@@ -698,23 +698,28 @@ pub fn from_images_with_resolution(images: &[(String, Vec<u8>)], resolution: Ima
     let mut doc = Document::new_empty();
     let mut tree = Pages::of(&doc)?;
     let mut profiles = Vec::new();
-    for img in images.iter().map(|(name, bytes)| embed(name, bytes, usize::MAX)).collect::<Result<Vec<_>, _>>()?.into_iter().flatten() {
-        let dpi = match resolution {
-            ImageResolution::Embedded => img.dpi,
-            ImageResolution::Dpi(dpi) => (dpi, dpi),
-        };
-        let (mut w, mut h) = (img.px.0 as f64 * 72.0 / dpi.0, img.px.1 as f64 * 72.0 / dpi.1);
-        // Keep huge images within the largest page PDF allows.
-        let k = (MAX_SIDE / w.max(h)).min(1.0);
-        w *= k;
-        h *= k;
-        let xr = add_image(&mut doc, img, &mut profiles);
-        let mut xobj = Dict::new();
-        xobj.set(b"Im0".to_vec(), Object::Ref(xr));
-        let mut res = Dict::new();
-        res.set(b"XObject".to_vec(), Object::Dict(xobj));
-        let content = format!("q {w:.3} 0 0 {h:.3} 0 0 cm /Im0 Do Q\n").into_bytes();
-        tree.add(&mut doc, w, h, res, Some(content));
+    // Compress each input into the document before decoding the next. A feeder batch
+    // can contain many highly compressed pages; retaining every decoded page at once
+    // would multiply peak memory by the number of inputs.
+    for (name, bytes) in images {
+        for img in embed(name, bytes, usize::MAX)? {
+            let dpi = match resolution {
+                ImageResolution::Embedded => img.dpi,
+                ImageResolution::Dpi(dpi) => (dpi, dpi),
+            };
+            let (mut w, mut h) = (img.px.0 as f64 * 72.0 / dpi.0, img.px.1 as f64 * 72.0 / dpi.1);
+            // Keep huge images within the largest page PDF allows.
+            let k = (MAX_SIDE / w.max(h)).min(1.0);
+            w *= k;
+            h *= k;
+            let xr = add_image(&mut doc, img, &mut profiles);
+            let mut xobj = Dict::new();
+            xobj.set(b"Im0".to_vec(), Object::Ref(xr));
+            let mut res = Dict::new();
+            res.set(b"XObject".to_vec(), Object::Dict(xobj));
+            let content = format!("q {w:.3} 0 0 {h:.3} 0 0 cm /Im0 Do Q\n").into_bytes();
+            tree.add(&mut doc, w, h, res, Some(content));
+        }
     }
     tree.finish(&mut doc)?;
     if let Some((name, _)) = images.first() {

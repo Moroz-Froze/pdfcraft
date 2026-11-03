@@ -1,5 +1,7 @@
 # PdfCraft parity with Adobe Acrobat Pro
 
+> **Last reviewed:** 2026-11-03 · **Last updated:** 2026-11-03 · **Change:** minor (Scanner acquisition (#312, adapted from #359): installed USB/network WIA drivers on Windows and local eSCL/SANE backends, with GUI and headless entry points. A Brother MFC-7860DW network flatbed scan at 200 dpi, color, Letter was acquired and saved as a one-page PDF on Windows. Other hardware, ADF/duplex, TWAIN/ICA and HTTPS-only eSCL remain unqualified. Readiness estimates unchanged.)
+
 > Integration update 2026-10-30: lossless JBIG2 generic and exact-copy symbol coding are included; no lossy substitution. Combined tests passed at bdf5620; the subsequent review fixes require fresh CI.
 
 > **Last reviewed:** 2026-10-25 · **Last updated:** 2026-10-26 · **Change:** minor (K Optimize and standards no longer lists monochrome downsampling as missing; scores and estimates unchanged)
@@ -295,6 +297,9 @@ catalog; smart cards and PKCS #11 tokens, scanners and Windows printers to test 
 licensed OCR or AI model.
 
 ## Revision history
+
+**2026-11-03 · minor:** Scanner acquisition (#312, adapted from #359): installed USB/network WIA drivers on Windows and local eSCL/SANE backends, with GUI and headless entry points. A Brother MFC-7860DW network flatbed scan at 200 dpi, color, Letter was acquired and saved as a one-page PDF on Windows. Other hardware, ADF/duplex, TWAIN/ICA and HTTPS-only eSCL remain unqualified. Readiness estimates unchanged.
+
 
 | Date | Change | Summary |
 |---|---|---|

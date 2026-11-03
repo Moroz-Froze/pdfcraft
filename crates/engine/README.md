@@ -24,6 +24,11 @@ field actions and XFA events can still show messages; ordinary PDFs, static XFA 
 without an active layout keep their document scripts. Converting XFA to a static form and
 undoing that conversion switches the context with the document state.
 
+Scanner acquisition: `scan::scanners` lists devices and `scan::scan` acquires page images;
+`Session::create_from_scan` creates PDF pages at each delivered resolution. The GUI and
+headless tools share this contract; see [pdfcraft-scan](../scan/README.md). Partial transfers
+keep delivered pages, and no physical device is contacted at startup.
+
 ## The editing model
 
 Each open document holds a `pdfcraft_cos::Document`: the object graph plus a copy-on-write overlay.

@@ -6866,11 +6866,11 @@ title = "Scan from TWAIN/WIA/ICA/SANE scanners"
 area = "I"
 tier = "P2"
 milestone = "M14"
-status = "planned"
-commands = []
-tools = []
-evidence = []
-notes = ""
+status = "partial"
+commands = ["create.scanner"]
+tools = ["scanners", "doc_create"]
+evidence = ["crates/automation/tests/scanning.rs::scanner_acquisition_creates_dirty_document_and_renders_it", "crates/ui-egui/tests/scan.rs::scan_dialog_scans_a_page_into_a_new_pdf"]
+notes = "WIA USB/network drivers on Windows, direct eSCL on desktop, optional SANE; creates new PDFs via GUI/automation. Partial transfer pages are retained. Brother MFC-7860DW network flatbed/color/200 dpi/Letter acquired and saved one page on Windows at 00c88a2f; other hardware and ADF/duplex unqualified. TWAIN/ICA and HTTPS-only eSCL remain."
 
 [[feature]]
 id = "ocr.scan-presets"
@@ -6878,11 +6878,11 @@ title = "Scan presets"
 area = "I"
 tier = "P2"
 milestone = "M14"
-status = "planned"
-commands = []
-tools = []
-evidence = []
-notes = ""
+status = "partial"
+commands = ["create.scanner"]
+tools = ["scanners", "doc_create"]
+evidence = ["crates/scan/src/tests.rs::presets_and_names_round_trip", "crates/ui-egui/tests/scan.rs::scan_dialog_scans_a_page_into_a_new_pdf"]
+notes = "Four colour/document presets, DPI/source/paper overrides and multiple flatbed pages. Custom saved presets and physical-device qualification remain."
 
 [[feature]]
 id = "ocr.scan-append"

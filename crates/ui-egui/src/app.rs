@@ -223,6 +223,7 @@ impl PdfCraftApp {
             organize_zoom: 1.0,
             combine_thumbs: Default::default(),
             image_import: None,
+            scan_ui: None,
             custom_stamps: Vec::new(),
             stamp_draft: Default::default(),
             optimize_draft: OptimizeDraft::default(),
@@ -608,6 +609,7 @@ impl eframe::App for PdfCraftApp {
         self.poll_export();
         self.auto_ocr_scanned_page();
         self.poll_ocr();
+        self.poll_scan();
         self.poll_optimize();
         self.poll_action();
         self.process_file_requests();

@@ -76,6 +76,7 @@ mod app;
 mod hooks;
 mod persist;
 mod platform;
+mod scan_ui;
 mod state;
 mod tools;
 mod workflows;
@@ -541,6 +542,8 @@ pub struct PdfCraftApp {
     pub(crate) combine_thumbs: combine_grid::Thumbs,
     /// Images waiting for the resolution choice (released on cancel).
     pub image_import: Option<create_ui::ImageImport>,
+    /// Create PDF from Scanner: the scanners found, the choices and the pages so far.
+    pub scan_ui: Option<scan_ui::ScanUi>,
     /// The custom stamp library, and the stamp being created.
     pub custom_stamps: Vec<stamps_ui::CustomStamp>,
     pub stamp_draft: stamps_ui::StampDraft,

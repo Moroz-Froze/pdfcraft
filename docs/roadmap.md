@@ -1,5 +1,7 @@
 # PdfCraft roadmap: milestones and what's next
 
+> **Last reviewed:** 2026-11-03 · **Last updated:** 2026-11-03 · **Change:** minor (Scanner acquisition (#312, adapted from #359): installed USB/network WIA drivers on Windows and local eSCL/SANE backends, with GUI and headless entry points. A Brother MFC-7860DW network flatbed scan at 200 dpi, color, Letter was acquired and saved as a one-page PDF on Windows. Other hardware, ADF/duplex, TWAIN/ICA and HTTPS-only eSCL remain unqualified. Readiness estimates unchanged.)
+
 > **Last reviewed:** 2026-11-01 | **Last updated:** 2026-11-01 | **Change:** patch (M7 #5657: header/footer, watermark and background operations commit all selected pages together; later-page errors preserve marks, content, shared/inherited resources and pending edits; estimates unchanged)
 
 > **Last reviewed:** 2026-11-01 | **Last updated:** 2026-11-01 | **Change:** patch (M7, PR #2155 further review: inherited drawing/text state, affine image gestures, paste/selection ownership, no-op scripts and menu permissions; estimates unchanged)
@@ -281,6 +283,9 @@ M2 (renderer), M7 (content editing), M10 (OCR and Office), M11 (Preflight and st
 - Unmeasured fidelity: without an Acrobat comparison harness, quality gaps surface as user reports.
 
 ## Revision history
+
+**2026-11-03 · minor:** Scanner acquisition (#312, adapted from #359): installed USB/network WIA drivers on Windows and local eSCL/SANE backends, with GUI and headless entry points. A Brother MFC-7860DW network flatbed scan at 200 dpi, color, Letter was acquired and saved as a one-page PDF on Windows. Other hardware, ADF/duplex, TWAIN/ICA and HTTPS-only eSCL remain unqualified. Readiness estimates unchanged.
+
 
 **2026-10-26 · patch:** M2/PR #4172: reconcile current main and preserve upstream Japanese serif/weight selection alongside the installed CJK viewer and preview fallback. Estimates unchanged.
 

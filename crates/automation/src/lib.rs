@@ -29,6 +29,7 @@ mod measure;
 mod printing;
 mod reading;
 mod redact;
+mod scanning;
 mod signing;
 mod text_cache;
 mod tools;

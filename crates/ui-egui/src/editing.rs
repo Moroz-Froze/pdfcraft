@@ -1056,6 +1056,23 @@ mod revert_draft_tests {
     }
 
     #[test]
+    fn quit_preserves_collected_scans_as_an_unsaved_document() {
+        use pdfcraft_engine::scan;
+        let fake = pdfcraft_scan::fake::FakeEscl::start(0).unwrap();
+        let pages =
+            scan::scan(&fake.id(), &scan::ScanSettings { dpi: 75, ..Default::default() }, &std::sync::atomic::AtomicBool::new(false)).unwrap();
+        let mut app = PdfCraftApp::new();
+        app.scan_ui = Some(Default::default());
+        app.scan_ui.as_mut().unwrap().pages = pages;
+        let ctx = egui::Context::default();
+        assert!(!app.request_quit(&ctx));
+        assert_eq!(app.session.docs().len(), 1);
+        assert!(app.session.docs()[0].dirty);
+        assert_eq!(app.close_request, Some(CloseRequest::Quit));
+        assert!(app.scan_ui.as_ref().unwrap().pages.is_empty());
+    }
+
+    #[test]
     fn control_quit_prompts_for_uncommitted_typing_and_cancel_retains_it() {
         for queued in [false, true] {
             let mut app = app();

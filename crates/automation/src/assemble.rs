@@ -5,6 +5,7 @@ use super::{Arc, Automation, CombineSource, Edit, Path, PathBuf, Value, json};
 
 impl Automation {
     pub(crate) fn doc_create(&mut self, a: &Args) -> Result<Value> {
+        let mut scan_warning = None;
         let (name, bytes) = match a.str("from")? {
             "blank" => {
                 let n = a.opt_int("pages")?.unwrap_or(1).clamp(1, 10_000) as usize;
@@ -44,11 +45,32 @@ impl Automation {
                 })?;
                 (format!("{title}.pdf"), bytes)
             }
+            "scanner" => {
+                let (name, bytes, warning) = self.scan_to_pdf(a)?;
+                scan_warning = warning;
+                (name, bytes)
+            }
             other => return Err(ToolError::InvalidArgs(format!("unknown source {other:?}"))),
         };
         let name = a.opt_str("name")?.map(str::to_owned).unwrap_or(name);
         let id = self.session.open_new(name, bytes).map_err(failed)?;
-        Ok(summary(self.session.get(id).ok_or_else(|| failed("the document vanished"))?))
+        let mut result = summary(self.session.get(id).ok_or_else(|| failed("the document vanished"))?);
+        if a.str("from")? == "scanner" && a.opt_bool("ocr")?.unwrap_or(false) {
+            let settings = pdfcraft_engine::ocr::OcrSettings { language: a.opt_str("language")?.unwrap_or("en").to_string(), ..Default::default() };
+            if let Err(error) = self.session.recognize_text(id, &[], settings) {
+                scan_warning = Some(format!(
+                    "{}text recognition failed: {error}; scanned pages remain open",
+                    scan_warning.map_or(String::new(), |w| format!("{w}; "))
+                ));
+            }
+            result = summary(self.session.get(id).ok_or_else(|| failed("the document vanished"))?);
+        }
+        if let Some(warning) = scan_warning
+            && let Some(object) = result.as_object_mut()
+        {
+            object.insert("scan_warning".into(), json!(warning));
+        }
+        Ok(result)
     }
 
     pub(crate) fn page_transition_set(&mut self, a: &Args) -> Result<Value> {

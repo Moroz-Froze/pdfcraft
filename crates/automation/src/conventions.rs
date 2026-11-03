@@ -33,6 +33,9 @@ impl Automation {
             Some(Value::Object(params)) => params.clone(),
             Some(_) => return Err(ToolError::InvalidArgs("params must be an object".into())),
         };
+        if id == "create.scanner" {
+            params.insert("from".into(), json!("scanner"));
+        }
         let props = def.input_schema.get("properties").and_then(Value::as_object).ok_or_else(|| failed("tool has no parameter schema"))?;
         let accepted = props.keys().map(String::as_str).collect::<Vec<_>>().join(", ");
         let mut warnings = Vec::new();

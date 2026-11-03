@@ -1,5 +1,7 @@
 # Where PdfCraft falls short of Acrobat Pro
 
+> **Last reviewed:** 2026-11-03 · **Last updated:** 2026-11-03 · **Change:** minor (Scanner acquisition (#312, adapted from #359): installed USB/network WIA drivers on Windows and local eSCL/SANE backends, with GUI and headless entry points. A Brother MFC-7860DW network flatbed scan at 200 dpi, color, Letter was acquired and saved as a one-page PDF on Windows. Other hardware, ADF/duplex, TWAIN/ICA and HTTPS-only eSCL remain unqualified. Readiness estimates unchanged.)
+
 > **Last reviewed:** 2026-10-25 · **Last updated:** 2026-10-25 · **Change:** minor (gaps 5 and 14 current state: native release Hans face via LXGW WenKai Lite; Arabic logical catalog, explicit RTL direction and mirrored stock chrome, with native/browser/IME workflows unqualified; no readiness re-estimate)
 > **Last reviewed:** 2026-10-15 · **Last updated:** 2026-10-15 · **Change:** minor (gap 3: #2517 a blank line stays a paragraph break; estimates unchanged) · **Target:** Adobe Acrobat Pro (Acrobat DC, continuous track 26.002.21931, macOS)
 
@@ -409,6 +411,9 @@ update the numbers.
 - **Estimate:** 4–8 h. **Doc:** [target-app-parity.md](target-app-parity.md).
 
 ## Revision history
+
+**2026-11-03 · minor:** Scanner acquisition (#312, adapted from #359): installed USB/network WIA drivers on Windows and local eSCL/SANE backends, with GUI and headless entry points. A Brother MFC-7860DW network flatbed scan at 200 dpi, color, Letter was acquired and saved as a one-page PDF on Windows. Other hardware, ADF/duplex, TWAIN/ICA and HTTPS-only eSCL remain unqualified. Readiness estimates unchanged.
+
 
 | Date | Change | Summary |
 |---|---|---|

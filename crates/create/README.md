@@ -24,7 +24,8 @@ Layer L4. Create a PDF (Acrobat's Create a PDF tool), execution plan M10.2:
   (comment summaries, compare reports): such characters are written as `[U+XXXX]` and the first
   line says so (`ESCAPED_NOTE`).
 
-Every function returns a `pdfcraft_cos::Document`; the caller writes it.
+Every function returns a `pdfcraft_cos::Document`; the caller writes it. Image batches decode
+and embed one input at a time, so decoded pixels from separate inputs do not accumulate in memory.
 
 Image export and Save Image As apply each lossless image's Decode pair before converting its color components.
 JBIG2 images and masks are decoded through `pdfcraft_cos::ImageBudget` (`pdfcraft_filters::decode_jbig2_within`), behind

@@ -25,6 +25,33 @@ impl Session {
         self.write_new(&pdfcraft_create::from_images_with_resolution(images, resolution)?)
     }
 
+    /// Image pages sized at each scan's delivered resolution, without resampling pixels.
+    pub fn create_from_scan(&self, pages: &[pdfcraft_scan::ScannedPage], title: &str) -> Result<Arc<Vec<u8>>, EditError> {
+        guard(|| {
+            let first = pages.first().ok_or_else(|| EditError::Invalid("the scanner sent no pages".into()))?;
+            let total = pages.iter().try_fold(0usize, |sum, p| sum.checked_add(p.bytes.len()));
+            if pages.len() > pdfcraft_scan::MAX_PAGES
+                || total.is_none_or(|n| n > pdfcraft_scan::MAX_SCAN_BYTES)
+                || pages.iter().any(|p| !p.dpi.is_finite() || p.dpi < 1.0 || p.dpi > f64::from(*pdfcraft_scan::DPI_RANGE.end()))
+            {
+                return Err(EditError::Invalid("scanned pages exceed the supported memory, page or resolution limit".into()));
+            }
+            if pages.iter().all(|p| p.dpi == first.dpi) {
+                let images = pages.iter().map(|p| (title.to_string(), p.bytes.clone())).collect::<Vec<_>>();
+                return self.create_from_images_with_resolution(&images, ImageResolution::Dpi(first.dpi));
+            }
+            let sources = pages
+                .iter()
+                .map(|p| {
+                    self.create_from_images_with_resolution(&[(title.to_string(), p.bytes.clone())], ImageResolution::Dpi(p.dpi))
+                        .map(|bytes| (title.to_string(), bytes))
+                })
+                .collect::<Result<Vec<_>, _>>()?;
+            self.combine(&sources)
+        })
+        .map_err(|_| EditError::Source("the scanned image could not be read; the acquired pages remain available".into()))?
+    }
+
     /// A new document from plain text (US Letter, 11 pt Helvetica). Text Helvetica can't draw is
     /// refused, naming the line and the character (never set as `?`).
     pub fn create_from_text(&self, title: &str, text: &str) -> Result<Arc<Vec<u8>>, EditError> {

@@ -61,6 +61,7 @@ struct Pending {
     ocr_now: bool,
     compare_now: bool,
     images_now: bool,
+    scan_act: Option<crate::scan_ui::ScanAction>,
     stamp_now: bool,
     alt_now: bool,
     close: bool,
@@ -146,6 +147,10 @@ fn dialog_body(ui: &mut egui::Ui, app: &mut PdfCraftApp, dialog: Dialog, req: &m
     match dialog {
         Dialog::WordCount => {
             req.close = crate::word_count_ui::body(ui, app);
+        }
+        Dialog::Scanner => {
+            req.scan_act = Some(crate::scan_ui::body(ui, app, &t));
+            return false;
         }
         Dialog::CreateImages => {
             let (go, cancel) = crate::create_ui::image_import_body(ui, app);
@@ -1977,6 +1982,28 @@ fn finish_close(app: &mut PdfCraftApp, dialog: Dialog, modal_closed: bool, req: 
     }
     if req.stamp_now {
         app.save_custom_stamp();
+    }
+    if dialog == Dialog::Scanner {
+        let act = req.scan_act.take().unwrap_or_default();
+        if act.close || (modal_closed && !act.finish) {
+            app.dismiss_scan_dialog();
+        } else {
+            if act.search {
+                app.search_scanners();
+            }
+            if act.add_address {
+                app.add_scanner_address();
+            }
+            if act.stop {
+                app.stop_scan();
+            }
+            if act.scan {
+                app.start_scan();
+            }
+            if act.finish {
+                app.finish_scan();
+            }
+        }
     }
     if req.images_now {
         app.finish_image_import();
