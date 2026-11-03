@@ -1,5 +1,11 @@
 # PdfCraft parity with Adobe Acrobat Pro
 
+> **Last reviewed:** 2026-11-02 · **Last updated:** 2026-11-02 · **Change:** patch (local area-average scan minification for #2393, adapted from #1739; no readiness re-estimate)
+
+Local rendering progress: reduced bilevel scans retain thin strokes through bounded area
+averaging, with fractional-ratio, transparency, bitmap-glyph and tile regressions. Rendering
+still uses the vendored engine; these checks do not establish fidelity against Acrobat.
+
 > Integration update 2026-10-30: lossless JBIG2 generic and exact-copy symbol coding are included; no lossy substitution. Combined tests passed at bdf5620; the subsequent review fixes require fresh CI.
 
 > **Last reviewed:** 2026-10-25 · **Last updated:** 2026-10-26 · **Change:** minor (K Optimize and standards no longer lists monochrome downsampling as missing; scores and estimates unchanged)
@@ -295,6 +301,8 @@ catalog; smart cards and PKCS #11 tokens, scanners and Windows printers to test 
 licensed OCR or AI model.
 
 ## Revision history
+
+**2026-11-02 · patch:** Record the local scan-minification fix from #1739/#2393 without changing feature status or readiness estimates.
 
 | Date | Change | Summary |
 |---|---|---|

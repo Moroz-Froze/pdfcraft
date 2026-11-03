@@ -734,8 +734,8 @@ milestone = "M2"
 status = "partial"
 commands = []
 tools = ["page_render"]
-evidence = ["crates/render/src/raster/tests.rs::renders_a_blue_rectangle", "crates/automation/tests/it/automation.rs::open_inspect_render_and_find", "crates/render/src/raster/tests.rs::user_unit_scales_the_page_and_everything_on_it"]
-notes = "hayro bootstrap renderer; own DisplayList devices in M2.6. Pages with /UserUnit are shown at their size in points, as Acrobat reads the value"
+evidence = ["crates/render/src/raster/tests.rs::renders_a_blue_rectangle", "crates/automation/tests/it/automation.rs::open_inspect_render_and_find", "crates/render/src/raster/tests.rs::user_unit_scales_the_page_and_everything_on_it", "crates/render/src/raster/tests.rs::shrunk_one_bit_scans_keep_thin_lines", "crates/render/src/raster/tests.rs::tiles_match_full_render_for_half_pixel_minified_images"]
+notes = "hayro bootstrap renderer; own DisplayList devices in M2.6. Pages with /UserUnit are shown at their size in points, as Acrobat reads the value. Shrunk images without /Interpolate are area-averaged, preserving thin scan strokes; same-size soft masks are averaged premultiplied, and whole-pixel snapping is consistent across tiles. Enlargement is unchanged. Rendering fidelity against Acrobat remains unmeasured."
 
 [[feature]]
 id = "view.render-shadings-patterns"

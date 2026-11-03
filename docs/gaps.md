@@ -1,5 +1,7 @@
 # Where PdfCraft falls short of Acrobat Pro
 
+> **Last reviewed:** 2026-11-02 · **Last updated:** 2026-11-02 · **Change:** patch (gap 2: local area-average scan-minification fix for #2393, adapted from #1739; rendering gap and readiness estimates remain)
+
 > **Last reviewed:** 2026-10-25 · **Last updated:** 2026-10-25 · **Change:** minor (gaps 5 and 14 current state: native release Hans face via LXGW WenKai Lite; Arabic logical catalog, explicit RTL direction and mirrored stock chrome, with native/browser/IME workflows unqualified; no readiness re-estimate)
 > **Last reviewed:** 2026-10-15 · **Last updated:** 2026-10-15 · **Change:** minor (gap 3: #2517 a blank line stays a paragraph break; estimates unchanged) · **Target:** Adobe Acrobat Pro (Acrobat DC, continuous track 26.002.21931, macOS)
 
@@ -64,6 +66,11 @@ update the numbers.
 ## The gaps
 
 ### 2. Rendering is borrowed and its fidelity unmeasured
+
+- **Local progress (2026-11-02):** non-interpolated images shrink by bounded area averaging,
+  preserving thin bilevel scan strokes instead of nearest-sampling them away (#2393; adapted
+  from #1739). Synthetic regressions cover fractional ratios, premultiplied masks, bitmap
+  glyphs and tile consistency. This does not close the renderer or fidelity-measurement gap.
 
 - **Missing:** our own renderer (M2: `model` crate, font engine, DisplayList devices, ADR-0004), or
   an owner decision to adopt another engine; and any measurement of rendering against Acrobat.
@@ -409,6 +416,8 @@ update the numbers.
 - **Estimate:** 4–8 h. **Doc:** [target-app-parity.md](target-app-parity.md).
 
 ## Revision history
+
+**2026-11-02 · patch:** Gap 2 records the local scan-minification fix from #1739/#2393. Renderer ownership, measured fidelity and estimates remain unchanged.
 
 | Date | Change | Summary |
 |---|---|---|
